@@ -1,0 +1,81 @@
+.aboutus-section {
+    background: #fff;
+    padding: 48px 0 32px 0;
+  }
+  
+  .aboutus-title {
+    color: #8a9a3c;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+    letter-spacing: 0.01em;
+  }
+  
+  .aboutus-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+  
+  .aboutus-card {
+    display: flex;
+    align-items: center;
+    background: #f3f4ed;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 2px solid #dbe4b6;
+    padding: 28px 32px;
+    max-width: 900px;
+    width: 95%;
+    gap: 32px;
+  }
+  
+  .aboutus-card-row {
+    flex-direction: row;
+  }
+  
+  .aboutus-card-row-reverse {
+    flex-direction: row-reverse;
+  }
+  
+  .aboutus-card-img {
+    width: 240px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    background: #eee;
+  }
+  
+  .aboutus-card-text {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .aboutus-card-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 10px;
+    text-align: center;
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 900px) {
+    .aboutus-card, .aboutus-card-row, .aboutus-card-row-reverse {
+      flex-direction: column !important;
+      align-items: center;
+      padding: 18px 8px;
+      gap: 18px;
+    }
+    .aboutus-card-img {
+      width: 98vw;
+      max-width: 98vw;
+      height: 160px;
+    }
+    .aboutus-card-title {
+      font-size: 1.1rem;
+    }
+  }
