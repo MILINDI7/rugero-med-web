@@ -1,25 +1,25 @@
 /* Background and Layout */
-.contact-section {
+.contact-sections {
   background-color: #7D9020;
   color: white;
   padding: 3rem 2rem;
   font-family: 'Segoe UI', sans-serif;
 }
 
-.contact-grid {
+.contact-grids {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
 /* Left Side: Contact Info */
-.contact-info {
+.contact-infos {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.contact-info h3 {
+.contact-infos h3 {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
@@ -28,7 +28,7 @@
   width: fit-content;
 }
 
-.contact-detail {
+.contact-details {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -36,12 +36,12 @@
   color: white;
 }
 
-.contact-detail i {
+.contact-details i {
   font-size: 1.1rem;
 }
 
 /* Google Map */
-.map-embed {
+.map-embeds {
   border-radius: 8px;
   border: 1px solid #ccc;
   width: 100%;
@@ -49,29 +49,29 @@
 }
 
 /* Right Side: Form */
-.contact-form-container {
+.contact-form-containers {
   background-color: #dfe4d8;
   padding: 2rem;
   border-radius: 20px;
   color: #444;
 }
 
-.contact-form-container h3 {
+.contact-form-containers h3 {
   color: #7D9020;
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.25rem;
 }
 
-.contact-form-container p {
+.contact-form-containers p {
   font-size: 0.85rem;
   margin-bottom: 1rem;
   color: #888;
 }
 
 /* Form Fields */
-.contact-form-container input,
-.contact-form-container textarea {
+.contact-form-containers input,
+.contact-form-containers textarea {
   width: 100%;
   padding: 0.6rem;
   border: 1px solid #ccc;
@@ -81,13 +81,13 @@
   margin-bottom: 1rem; /* <-- Vertical spacing between fields */
 }
 
-.contact-form-container textarea {
+.contact-form-containers textarea {
   resize: none;
   height: 100px;
 }
 
 /* Button */
-.contact-form-container button {
+.contact-form-containers button {
   background-color: #7D9020;
   color: white;
   border: none;
@@ -99,12 +99,12 @@
   margin-top: 0.5rem;
 }
 
-.contact-form-container button:hover {
+.contact-form-containers button:hover {
   background-color: #6a7c1d;
 }
 
 /* Footer */
-.contact-footer {
+.contact-footers {
   text-align: center;
   margin-top: 2rem;
   font-size: 0.75rem;
