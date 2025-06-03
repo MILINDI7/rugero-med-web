@@ -6,7 +6,7 @@ const Header = () => (
     <div className="header-container">
       <div className="header-logo-title">
         <img
-          src="./images/logo.png"
+          src={`${process.env.PUBLIC_URL}/images/logo.png`}
           alt="RugeroMed Logo"
           className="header-logo"
         />

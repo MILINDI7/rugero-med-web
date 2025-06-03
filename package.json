@@ -2,6 +2,7 @@
   "name": "rugeromed",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://MILINDI7.github.io/rugero-med-web",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -11,8 +12,7 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "homepage": "https://MILINDI7.github.io/rugero-med-web"
+    "web-vitals": "^2.1.4"
 
   },
   "scripts": {

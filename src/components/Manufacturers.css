@@ -1,0 +1,41 @@
+.manufacturers-section {
+  padding: 2rem;
+  background-color: #f9fafb; /* Tailwind bg-gray-50 */
+  overflow: hidden;
+}
+
+.manufacturers-title {
+  text-align: center;
+  color: #7D9020;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.logo-slider {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.logo-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  animation: scroll 30s linear infinite;
+}
+
+.logo-image {
+  width: 8rem;
+  height: auto;
+  object-fit: contain;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

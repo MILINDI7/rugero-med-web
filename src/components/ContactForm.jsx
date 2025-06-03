@@ -1,31 +1,48 @@
+import './ContactForm.css';
+
 const ContactForm = () => (
-    <section className="p-8">
-      <h2 className="text-3xl font-bold mb-6 text-center">Get in Touch</h2>
-  
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <p className="mb-2"><strong>Address:</strong> Kigali, Rwanda</p>
-          <p className="mb-2"><strong>Email:</strong> info@rugeromed.com</p>
-          <p className="mb-4"><strong>Phone:</strong> +250 788 123 456</p>
-          <iframe
-            title="map"
-            src="https://maps.google.com/maps?q=Kigali,%20Rwanda&t=&z=13&ie=UTF8&iwloc=&output=embed"
-            className="w-full h-64 border rounded"
-            loading="lazy"
-          ></iframe>
+  <section className="contact-section">
+    <div className="contact-grid">
+      {/* Left: Contact Info and Map */}
+      <div className="contact-info">
+        <h3>Get in touch</h3>
+        <div className="contact-detail">
+          <i>📍</i>
+          <span>KG 607 ST, Rugando Kimihurura, Gasabo, Kigali - Rwanda</span>
         </div>
-  
-        <form className="space-y-4">
-          <input type="text" placeholder="Name" className="w-full p-2 border rounded" required />
-          <input type="email" placeholder="Email" className="w-full p-2 border rounded" required />
-          <textarea placeholder="Your Message" className="w-full p-2 border rounded h-32" required />
-          <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-            Send Message
-          </button>
-        </form>
+        <div className="contact-detail">
+          <i>📞</i>
+          <span>(+250) 787 541 188</span>
+        </div>
+        <div className="contact-detail">
+          <i>📧</i>
+          <span>info@rugeromed.com</span>
+        </div>
+        <iframe
+          className="map-embed"
+          title="Kigali Map"
+          src="https://maps.google.com/maps?q=Kigali,%20Rwanda&t=&z=13&ie=UTF8&iwloc=&output=embed"
+          loading="lazy"
+        ></iframe>
       </div>
-    </section>
-  );
-  
-  export default ContactForm;
-  
+
+      {/* Right: Form */}
+      <form className="contact-form-container">
+        <h3>Send us a message</h3>
+        <p>Our team is committed to providing exceptional customer service</p>
+        <input type="text" placeholder="Name" required />
+        <input type="email" placeholder="Email" required />
+        <input type="text" placeholder="Subject" required />
+        <textarea placeholder="Message" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    {/* Footer */}
+    <div className="contact-footer">
+      Copyright © 2024 RugeroMed, All right reserved.
+    </div>
+  </section>
+);
+
+export default ContactForm;

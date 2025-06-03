@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import './Hero.css';
 
 const images = [
-  '/images/slide1.jpg',
-  '/images/slide2.jpg',
-  '/images/slide3.jpg',
+  `${process.env.PUBLIC_URL}/images/slide1.jpg`,
+  `${process.env.PUBLIC_URL}/images/slide2.jpg`,
+  `${process.env.PUBLIC_URL}/images/slide3.jpg`,
 ];
+
 
 const Hero = () => {
   const [index, setIndex] = useState(0);

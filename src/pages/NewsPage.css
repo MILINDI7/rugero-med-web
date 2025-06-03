@@ -1,0 +1,121 @@
+/* Global */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: white;
+}
+
+/* Section Headings */
+.section-title {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #7a942d;
+  text-align: center;
+  margin-top: 8rem;
+  margin-bottom: 1rem;
+}
+
+.impact-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111;
+  text-align: center;
+  margin: 3rem 0 1rem;
+}
+
+/* Card Slider */
+.card-slider-wrapper {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 0 2rem;
+  scroll-snap-type: x mandatory;
+}
+
+.card-slider-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* News Card */
+.news-card {
+  flex: 0 0 auto;
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.2s;
+}
+
+.news-card:hover {
+  transform: translateY(-5px);
+}
+
+.news-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #007a5e;
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  font-size: 0.85rem;
+  color: #222;
+}
+
+/* Impact Card */
+.impact-section {
+  background-color: #fafafa;
+  padding-bottom: 2rem;
+}
+
+.impact-card {
+  flex: 0 0 auto;
+  width: 300px;
+  height: 280px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.2s;
+}
+
+.impact-card:hover {
+  transform: translateY(-5px);
+}
+
+.impact-card .card-content {
+  text-align: center;
+  padding: 1rem;
+}
+
+.impact-icon {
+  font-size: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Footer */
+.main-footer {
+  background-color: #7a942d;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+}
