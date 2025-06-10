@@ -1,31 +1,50 @@
-const ContactForm = () => (
-    <section className="p-8">
-      <h2 className="text-3xl font-bold mb-6 text-center">Get in Touch</h2>
-  
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <p className="mb-2"><strong>Address:</strong> Kigali, Rwanda</p>
-          <p className="mb-2"><strong>Email:</strong> info@rugeromed.com</p>
-          <p className="mb-4"><strong>Phone:</strong> +250 788 123 456</p>
-          <iframe
-            title="map"
-            src="https://maps.google.com/maps?q=Kigali,%20Rwanda&t=&z=13&ie=UTF8&iwloc=&output=embed"
-            className="w-full h-64 border rounded"
-            loading="lazy"
-          ></iframe>
+import { Link } from "react-router-dom";
+import "./ProjectsAndTrainings.css";
+
+const ProjectsAndTrainings = () => {
+  return (
+    <>
+      <section className="projects-trainings-container">
+        <div className="card-wrapper">
+          <div className="card">
+            <img
+              src={`${process.env.PUBLIC_URL}/images/projects.jpg`}
+              alt="Projects"
+              className="card-img"
+            />
+            <div className="card-overlay">
+              <h2 className="card-title">Projects</h2>
+              <p className="card-desc">
+                Our projects showcase innovation, dedication, and impact. Explore our diverse initiatives that drive progress and deliver value across various industries.
+              </p>
+              <Link to="/projects" className="card-link" />
+            </div>
+          </div>
         </div>
-  
-        <form className="space-y-4">
-          <input type="text" placeholder="Name" className="w-full p-2 border rounded" required />
-          <input type="email" placeholder="Email" className="w-full p-2 border rounded" required />
-          <textarea placeholder="Your Message" className="w-full p-2 border rounded h-32" required />
-          <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-            Send Message
-          </button>
-        </form>
-      </div>
-    </section>
+
+        <div className="card-wrapper training-offset">
+          <div className="card">
+            <img
+              src={`${process.env.PUBLIC_URL}/images/trainings.jpg`}
+              alt="Trainings"
+              className="card-img"
+            />
+            <div className="card-overlay">
+              <h2 className="card-title">Trainings</h2>
+              <p className="card-desc">
+                Our training programs empower individuals with practical skills and knowledge, fostering growth and excellence in their fields.
+              </p>
+              <Link to="/trainings" className="card-link" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="footer">
+        <p>Copyright © 2024 RugeroMed, All right reserved.</p>
+      </footer>
+    </>
   );
-  
-  export default ContactForm;
-  
+};
+
+export default ProjectsAndTrainings;
