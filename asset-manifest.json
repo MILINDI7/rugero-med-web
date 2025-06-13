@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/rugero-med-web/static/css/main.a251129e.css",
-    "main.js": "/rugero-med-web/static/js/main.7df99e23.js",
+    "main.css": "/rugero-med-web/static/css/main.7fdf5c1c.css",
+    "main.js": "/rugero-med-web/static/js/main.b60e253c.js",
     "index.html": "/rugero-med-web/index.html",
-    "main.a251129e.css.map": "/rugero-med-web/static/css/main.a251129e.css.map",
-    "main.7df99e23.js.map": "/rugero-med-web/static/js/main.7df99e23.js.map"
+    "main.7fdf5c1c.css.map": "/rugero-med-web/static/css/main.7fdf5c1c.css.map",
+    "main.b60e253c.js.map": "/rugero-med-web/static/js/main.b60e253c.js.map"
   },
   "entrypoints": [
-    "static/css/main.a251129e.css",
-    "static/js/main.7df99e23.js"
+    "static/css/main.7fdf5c1c.css",
+    "static/js/main.b60e253c.js"
   ]
 }
