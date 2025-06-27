@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, Eye, Filter, BarChart3, Package, TrendingUp } from 'lucide-react';
-
+import "../pages/Products.css";
 // Mock data based on your existing products with added descriptions
 const initialProducts = [
   {

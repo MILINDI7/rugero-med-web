@@ -305,3 +305,22 @@
     font-size: 0.95rem;
   }
 }
+
+.admin-link {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin-left: 10px;
+}
+
+.admin-icon {
+  font-size: 24px;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .admin-link {
+    margin-left: 0;
+    justify-content: center;
+  }
+}
