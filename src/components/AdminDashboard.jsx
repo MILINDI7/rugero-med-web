@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductsDashboard from './ProductsDashboard';
+import NewsManagement from './NewsManagement';
 import { 
   Users, 
   ShoppingBag, 
-  Newspaper, // Changed icon for News
+  Newspaper,
   LogOut 
 } from 'lucide-react';
 import './AdminDashboard.css';
@@ -13,8 +14,15 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const navigate = useNavigate();
 
+  // Add state for overview statistics
+  const [stats, setStats] = useState({
+    totalProducts: 150,
+    totalNews: 24,
+    newOrders: 12,
+    visitors: 1234
+  });
+
   useEffect(() => {
-    // Check if user is authenticated
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     if (!isAuthenticated) {
       navigate('/login');
@@ -24,6 +32,14 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
     navigate('/login');
+  };
+
+  // Function to update statistics
+  const updateStats = (newStats) => {
+    setStats(prevStats => ({
+      ...prevStats,
+      ...newStats
+    }));
   };
 
   return (
@@ -84,34 +100,38 @@ const AdminDashboard = () => {
             <div className="overview-grid">
               <div className="stat-card">
                 <h3>Total Products</h3>
-                <p>150</p>
+                <p>{stats.totalProducts}</p>
               </div>
               <div className="stat-card">
                 <h3>Total News</h3>
-                <p>24</p>
+                <p>{stats.totalNews}</p>
               </div>
               <div className="stat-card">
                 <h3>New Orders</h3>
-                <p>12</p>
+                <p>{stats.newOrders}</p>
               </div>
               <div className="stat-card">
                 <h3>Visitors</h3>
-                <p>1,234</p>
+                <p>{stats.visitors}</p>
               </div>
             </div>
           )}
 
           {activeTab === 'products' && (
             <div className="products-section">
-              <h3>Product Management</h3>
-              <ProductsDashboard />
+              <ProductsDashboard 
+                onStatsUpdate={(productCount) => 
+                  updateStats({ totalProducts: productCount })}
+              />
             </div>
           )}
 
           {activeTab === 'news' && (
             <div className="news-section">
-              <h3>News Management</h3>
-              {/* Add your news management content here */}
+              <NewsManagement 
+                onStatsUpdate={(newsCount) => 
+                  updateStats({ totalNews: newsCount })}
+              />
             </div>
           )}
         </div>
