@@ -17,6 +17,11 @@ import Neurosurgery from "./pages/products/Neurosurgery";
 import Theatre from "./pages/products/Theatre";
 import HomeCares from "./pages/products/HomeCares";
 
+//dashboard imports
+
+import Login from './components/Login';
+import AdminDashboard from './components/AdminDashboard';
+
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -35,6 +40,8 @@ function App() {
           <Route path="/our-team" element={<OurTeam />} />
           <Route path="/news" element={<News />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />

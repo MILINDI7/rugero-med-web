@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Person } from '@mui/icons-material';
 import "./Header.css";
 
 const Header = () => {
@@ -147,6 +148,16 @@ const Header = () => {
           <Link to="/contact" className="header-link" onClick={closeAllMenus}>
             Contact
           </Link>
+
+          <Link 
+            to="/admin-dashboard" 
+            className="header-link admin-link" 
+            onClick={closeAllMenus}
+            title="Admin Dashboard"
+          >
+            <Person className="admin-icon" />
+          </Link>
+          
         </nav>
 
         {/* Mobile Menu Overlay */}
