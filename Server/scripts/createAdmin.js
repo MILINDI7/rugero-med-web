@@ -1,6 +1,7 @@
 import User from '../models/user.js';
 import dotenv from 'dotenv';
 import { hashPassword } from '../utils/helpers.js';
+import createDBConnection from '../utils/db.js';
 
 dotenv.config();
 
@@ -9,6 +10,8 @@ const createAdmin = async () => {
 		const email = process.env.ADMIN_EMAIL;
 		const password = process.env.ADMIN_PASSWORD;
 
+		await createDBConnection();
+
 		// Check if admin already exists
 		const existingAdmin = await User.findOne({ email });
 		if (existingAdmin) {
@@ -16,7 +19,7 @@ const createAdmin = async () => {
 			process.exit();
 		}
 
-		const hashedPassword = hashPassword(password);
+		const hashedPassword = await hashPassword(password);
 
 		const admin = await User.create({
 			email,
