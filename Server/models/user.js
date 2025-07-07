@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
 	{
@@ -20,11 +20,6 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			enum: ['admin', 'staff', 'customer'],
 			default: 'customer',
-		},
-
-		name: {
-			type: String,
-			default: '',
 		},
 	},
 	{
