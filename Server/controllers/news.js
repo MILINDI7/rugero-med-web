@@ -14,7 +14,13 @@ const postNews = async (req, res) => {
 		}
 
 		const loggedInUser = await getLoggedInUser(req);
-		if (loggedInUser.email !== process.env.SUPER_USER) {
+		if (loggedInUser.role !== 'admin') {
+			return res.status(403).json({
+				message:
+					'You are not authorized to perform this action',
+			});
+		}
+		if (loggedInUser.role !== 'admin') {
 			return res.status(403).json({
 				message:
 					'You are not authorized to perform this action',
@@ -60,7 +66,13 @@ const postNews = async (req, res) => {
 
 const getNews = async (req, res) => {
 	try {
-	} catch (error) {}
+		const news = await News.find();
+		return res.status(200).json({ news });
+	} catch (error) {
+		return res
+			.status(500)
+			.json({ message: 'something went wrong' });
+	}
 };
 
 const updateNews = async (req, res) => {
