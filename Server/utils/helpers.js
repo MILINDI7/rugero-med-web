@@ -23,9 +23,7 @@ const getLoggedInUser = async (req) => {
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
-			throw new Error(
-				'Not authorized: Missing or malformed token'
-			);
+			return null;
 		}
 
 		const accessToken = authHeader.split(' ')[1];
