@@ -6,6 +6,8 @@ import {
 	getProducts,
 	updateProduct,
 } from '../controllers/product.js';
+import { addProductValidator } from '../middlewares/products.js';
+import { checkSchema } from 'express-validator';
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ const uploadMiddleware = multerUpload().fields([
 
 router.get('/', getProducts);
 
-router.post('/', uploadMiddleware, addProduct);
+router.post('/', uploadMiddleware, checkSchema(addProductValidator), addProduct);
 router.patch('/:productId', uploadMiddleware, updateProduct);
 router.delete('/:productId', deleteProduct);
 

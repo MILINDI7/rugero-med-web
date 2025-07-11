@@ -1,3 +1,4 @@
+import { matchedData, validationResult } from 'express-validator';
 import Product from '../models/product.js';
 import { uploadToCloudinary } from '../utils/cloudinary.js';
 import { getLoggedInUser } from '../utils/helpers.js';
@@ -16,9 +17,12 @@ const getProducts = async (req, res) => {
 };
 const addProduct = async (req, res) => {
 	try {
-		const { title, description, category } = req.body;
+		const result = validationResult(req);
+		if (!result.isEmpty()) {
+			return res.status(400).json({ errors: result.array()[0].msg });
+		}
 
-		console.log('REQUEST', req.body);
+		const data = matchedData(req);
 
 		// Validate file existence
 		if (!req.files || !req.files.image) {
@@ -57,9 +61,7 @@ const addProduct = async (req, res) => {
 
 		// Save artifact to database
 		const newProduct = new Product({
-			title,
-			description,
-			category,
+			...data,
 			imageUrl,
 		});
 
@@ -82,12 +84,12 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
 	try {
-	} catch (error) {}
+	} catch (error) { }
 };
 
 const deleteProduct = async (req, res) => {
 	try {
-	} catch (error) {}
+	} catch (error) { }
 };
 
 export { deleteProduct, updateProduct, getProducts, addProduct };

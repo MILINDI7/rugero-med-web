@@ -3,50 +3,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Search, Plus, Edit, Trash2, Eye, Newspaper } from 'lucide-react';
 import './NewsManagement.css';
-
-// Initial news data
-const initialNews = [
-  {
-    _id: '1',
-    title: "RugeroMed Introduces Advanced Hospital Bed Equipment",
-    image: "/images/hospital-bed.jpg",
-    description: "RugeroMed, a leading medical equipment store, has launched a new range of advanced hospital beds...",
-    link: "/news/hospital-beds",
-    category: "Product Launch",
-    createdAt: new Date('2024-01-15')
-  },
-  {
-    _id: '2',
-    title: "RugeroMed Advances Inventory Management",
-    image: "/images/inventory.jpg",
-    description: "Improved logistics and distribution systems for better facility support.",
-    link: "/news/inventory",
-    category: "Company News",
-    createdAt: new Date('2024-01-20')
-  }
-];
-
-// Initial impact stories data
-const initialImpactStories = [
-  {
-    _id: '1',
-    title: "RugeroMed Pioneers Green Healthcare Solutions",
-    icon: "♻️",
-    link: "/impact/green-solutions",
-    category: "Environmental",
-    createdAt: new Date('2024-02-01')
-  },
-  {
-    _id: '2',
-    title: "RugeroMed Expands Access to Advanced Diagnostic Devices",
-    icon: "🩺",
-    link: "/impact/diagnostic-access",
-    category: "Healthcare Access",
-    createdAt: new Date('2024-02-05')
-  }
-];
-
-const categories = ['All', 'Product Launch', 'Company News', 'Environmental', 'Healthcare Access', 'Technology'];
+import { backendUrl } from '../config';
+import Modal from './Modal';
+import axios from 'axios';
 
 // Helper functions
 const formatDate = (date) => {
@@ -68,17 +27,26 @@ const handleImageError = (e) => {
 
 const NewsManagement = ({ onStatsUpdate }) => {
   // State management
-  const [news, setNews] = useState(() => {
-    const savedNews = localStorage.getItem('news');
-    return savedNews ? JSON.parse(savedNews) : initialNews;
-  });
-  
-  const [impactStories, setImpactStories] = useState(() => {
-    const savedStories = localStorage.getItem('impactStories');
-    return savedStories ? JSON.parse(savedStories) : initialImpactStories;
-  });
-
-  const [filteredItems, setFilteredItems] = useState([...news, ...impactStories]);
+  const [news, setNews] = useState([]);
+  const [impactStories, setImpactStories] = useState([
+    {
+      _id: '1',
+      title: "RugeroMed Pioneers Green Healthcare Solutions",
+      icon: "♻️",
+      link: "/impact/green-solutions",
+      category: "Environmental",
+      createdAt: new Date('2024-02-01')
+    },
+    {
+      _id: '2',
+      title: "RugeroMed Expands Access to Advanced Diagnostic Devices",
+      icon: "🩺",
+      link: "/impact/diagnostic-access",
+      category: "Healthcare Access",
+      createdAt: new Date('2024-02-05')
+    }
+  ]);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -88,77 +56,67 @@ const NewsManagement = ({ onStatsUpdate }) => {
   const [itemType, setItemType] = useState('news');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [newItem, setNewItem] = useState({
     title: '',
-    image: '',
+    image: null,
     description: '',
-    link: '',
     category: 'Product Launch',
     icon: '',
     createdAt: new Date()
   });
 
-  // Persist data to localStorage
+  // Fetch news from backend on mount
   useEffect(() => {
-    localStorage.setItem('news', JSON.stringify(news));
-  }, [news]);
-
-  useEffect(() => {
-    localStorage.setItem('impactStories', JSON.stringify(impactStories));
-  }, [impactStories]);
+    const fetchNews = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${backendUrl}/news/`);
+        if (!res.ok) throw new Error('Failed to fetch news');
+        const data = await res.json();
+        // Backend returns { news: [...] }
+        setNews(data.news || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchNews();
+  }, []);
 
   // Update parent component with stats
   useEffect(() => {
     const totalItems = news.length + impactStories.length;
     onStatsUpdate?.(totalItems);
-    
-    return () => {
-      // Cleanup if needed
-    };
   }, [news, impactStories, onStatsUpdate]);
 
   // Filter items based on search and category
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      let filtered = [...news, ...impactStories];
-      
-      if (selectedCategory !== 'All') {
-        filtered = filtered.filter(item => item.category === selectedCategory);
-      }
-      
-      if (searchTerm) {
-        filtered = filtered.filter(item => 
-          item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-      }
-      
-      setFilteredItems(filtered);
-    } catch (err) {
-      setError('Error filtering items');
-      console.error(err);
-    } finally {
-      setIsLoading(false);
+    let filtered = [...news, ...impactStories];
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter(item => item.category === selectedCategory);
     }
+    if (searchTerm) {
+      filtered = filtered.filter(item =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+    setFilteredItems(filtered);
   }, [news, impactStories, searchTerm, selectedCategory]);
-    // Form validation and CRUD operations
+
+  // Form validation and CRUD operations
   const validateForm = (item) => {
     const errors = [];
     if (!item.title.trim()) errors.push('Title is required');
     if (!item.category) errors.push('Category is required');
-    if (!item.link.trim()) errors.push('Link is required');
-    
     if (itemType === 'news') {
-      if (!item.image.trim()) errors.push('Image URL is required');
+      if (!item.image) errors.push('Image is required');
       if (!item.description.trim()) errors.push('Description is required');
     }
-    
     if (itemType === 'impact' && !item.icon.trim()) {
       errors.push('Icon is required');
     }
-
     if (errors.length > 0) {
       alert(errors.join('\n'));
       return false;
@@ -166,68 +124,110 @@ const NewsManagement = ({ onStatsUpdate }) => {
     return true;
   };
 
-  const handleAddItem = () => {
-    try {
+  // Add News (POST to backend)
+  const handleAddItem = async () => {
+    const authToken = localStorage.getItem('authToken');
+    if (itemType === 'news') {
       if (!validateForm(newItem)) return;
-
-      const item = {
-        _id: Date.now().toString(),
-        ...newItem,
-        createdAt: new Date()
-      };
-
-      if (itemType === 'news') {
-        setNews(prev => [...prev, item]);
-      } else {
-        setImpactStories(prev => [...prev, item]);
+      setIsLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append('title', newItem.title);
+        formData.append('category', newItem.category);
+        formData.append('description', newItem.description);
+        formData.append('image', newItem.image);
+        const res = await axios.post(`${backendUrl}/news/`, formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						Authorization: `Bearer ${authToken}`,
+					},
+				})
+        if (!res.ok) throw new Error('Failed to add news');
+        const added = await res.json();
+        setNews(prev => [...prev, added]);
+        setShowAddModal(false);
+        setNewItem({
+          title: '',
+          image: null,
+          description: '',
+          category: 'Product Launch',
+          icon: '',
+          createdAt: new Date()
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
-
+    } else {
+      // Impact stories remain local
+      if (!validateForm(newItem)) return;
+      setImpactStories(prev => [...prev, { ...newItem, _id: Date.now().toString(), createdAt: new Date() }]);
+      setShowAddModal(false);
       setNewItem({
         title: '',
-        image: '',
+        image: null,
         description: '',
-        link: '',
         category: 'Product Launch',
         icon: '',
         createdAt: new Date()
       });
-      setShowAddModal(false);
-    } catch (err) {
-      setError('Error adding item');
-      console.error(err);
     }
   };
 
-  const handleEditItem = () => {
-    try {
+  // Edit News (PATCH to backend)
+  const handleEditItem = async () => {
+    if (isNewsItem(selectedItem)) {
       if (!validateForm(selectedItem)) return;
-
-      if (isNewsItem(selectedItem)) {
-        setNews(prev => prev.map(item => 
-          item._id === selectedItem._id ? { ...selectedItem, updatedAt: new Date() } : item
-        ));
-      } else {
-        setImpactStories(prev => prev.map(item => 
-          item._id === selectedItem._id ? { ...selectedItem, updatedAt: new Date() } : item
-        ));
+      setIsLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append('title', selectedItem.title);
+        formData.append('category', selectedItem.category);
+        formData.append('description', selectedItem.description);
+        if (selectedItem.image instanceof File) {
+          formData.append('image', selectedItem.image);
+        }
+        const res = await fetch(`${backendUrl}/news/${selectedItem._id}`, {
+          method: 'PATCH',
+          body: formData
+        });
+        if (!res.ok) throw new Error('Failed to update news');
+        const updated = await res.json();
+        setNews(prev => prev.map(item => item._id === updated._id ? updated : item));
+        setShowEditModal(false);
+        setSelectedItem(null);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
+    } else {
+      // Impact stories remain local
+      if (!validateForm(selectedItem)) return;
+      setImpactStories(prev => prev.map(item => item._id === selectedItem._id ? { ...selectedItem, updatedAt: new Date() } : item));
       setShowEditModal(false);
       setSelectedItem(null);
-    } catch (err) {
-      setError('Error updating item');
-      console.error(err);
     }
   };
 
-  const handleDeleteItem = (itemId) => {
-    try {
-      if (window.confirm('Are you sure you want to delete this item?')) {
+  // Delete News (DELETE to backend)
+  const handleDeleteItem = async (itemId) => {
+    if (news.some(item => item._id === itemId)) {
+      if (!window.confirm('Are you sure you want to delete this news item?')) return;
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${backendUrl}/news/${itemId}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Failed to delete news');
         setNews(prev => prev.filter(item => item._id !== itemId));
-        setImpactStories(prev => prev.filter(item => item._id !== itemId));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError('Error deleting item');
-      console.error(err);
+    } else {
+      // Impact stories remain local
+      setImpactStories(prev => prev.filter(item => item._id !== itemId));
     }
   };
 
@@ -298,30 +298,7 @@ const NewsManagement = ({ onStatsUpdate }) => {
     </div>
   );
 
-  // Modal component
-  const Modal = ({ isOpen, onClose, title, children }) => {
-    if (!isOpen) return null;
-    
-    return (
-      <div className="modal-overlay">
-        <div className="modal-container">
-          <div className="modal-header">
-            <h2 className="modal-title">{title}</h2>
-            <button
-              onClick={onClose}
-              className="modal-close-button"
-            >
-              ×
-            </button>
-          </div>
-          <div className="modal-content">
-            {children}
-          </div>
-        </div>
-      </div>
-    );
-  };
-    // Main render
+  // Main render
   return (
     <div className="news-management">
       {error && (
@@ -379,7 +356,7 @@ const NewsManagement = ({ onStatsUpdate }) => {
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="category-select"
         >
-          {categories.map(category => (
+          {['All', 'Product Launch', 'Company News', 'Environmental', 'Healthcare Access', 'Technology'].map(category => (
             <option key={category} value={category}>{category}</option>
           ))}
         </select>
@@ -409,6 +386,7 @@ const NewsManagement = ({ onStatsUpdate }) => {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         title={`Add ${itemType === 'news' ? 'News' : 'Impact Story'}`}
+        className="mt-16"
       >
         <form onSubmit={(e) => {
           e.preventDefault();
@@ -427,12 +405,11 @@ const NewsManagement = ({ onStatsUpdate }) => {
           {itemType === 'news' && (
             <>
               <div className="form-group">
-                <label>Image URL</label>
+                <label>Image</label>
                 <input
-                  type="text"
-                  value={newItem.image}
-                  onChange={(e) => setNewItem({...newItem, image: e.target.value})}
-                  placeholder="Enter image URL"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setNewItem({...newItem, image: e.target.files[0]})}
                 />
               </div>
               <div className="form-group">
@@ -460,22 +437,12 @@ const NewsManagement = ({ onStatsUpdate }) => {
           )}
 
           <div className="form-group">
-            <label>Link</label>
-            <input
-              type="text"
-              value={newItem.link}
-              onChange={(e) => setNewItem({...newItem, link: e.target.value})}
-              placeholder="Enter link"
-            />
-          </div>
-
-          <div className="form-group">
             <label>Category</label>
             <select
               value={newItem.category}
               onChange={(e) => setNewItem({...newItem, category: e.target.value})}
             >
-              {categories.slice(1).map(category => (
+              {['Product Launch', 'Company News', 'Environmental', 'Healthcare Access', 'Technology'].map(category => (
                 <option key={category} value={category}>{category}</option>
               ))}
             </select>
@@ -504,14 +471,84 @@ const NewsManagement = ({ onStatsUpdate }) => {
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
         title="Edit Item"
+        className="mt-16"
       >
         {selectedItem && (
           <form onSubmit={(e) => {
             e.preventDefault();
             handleEditItem();
           }} className="item-form">
-            {/* Same form fields as Add Modal */}
-            {/* ... */}
+            <div className="form-group">
+              <label>Title</label>
+              <input
+                type="text"
+                value={selectedItem.title}
+                onChange={(e) => setSelectedItem({...selectedItem, title: e.target.value})}
+                placeholder="Enter title"
+              />
+            </div>
+
+            {isNewsItem(selectedItem) && (
+              <>
+                <div className="form-group">
+                  <label>Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setSelectedItem({...selectedItem, image: e.target.files[0]})}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    value={selectedItem.description}
+                    onChange={(e) => setSelectedItem({...selectedItem, description: e.target.value})}
+                    rows={3}
+                    placeholder="Enter description"
+                  />
+                </div>
+              </>
+            )}
+
+            {itemType === 'impact' && (
+              <div className="form-group">
+                <label>Icon</label>
+                <input
+                  type="text"
+                  value={selectedItem.icon}
+                  onChange={(e) => setSelectedItem({...selectedItem, icon: e.target.value})}
+                  placeholder="Enter emoji icon"
+                />
+              </div>
+            )}
+
+            <div className="form-group">
+              <label>Category</label>
+              <select
+                value={selectedItem.category}
+                onChange={(e) => setSelectedItem({...selectedItem, category: e.target.value})}
+              >
+                {['Product Launch', 'Company News', 'Environmental', 'Healthcare Access', 'Technology'].map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-actions">
+              <button
+                type="button"
+                onClick={() => setShowEditModal(false)}
+                className="cancel-button"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="submit-button"
+              >
+                Save Changes
+              </button>
+            </div>
           </form>
         )}
       </Modal>

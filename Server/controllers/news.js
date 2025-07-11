@@ -1,11 +1,17 @@
+import { matchedData, validationResult } from 'express-validator';
 import News from '../models/news.js';
 import { uploadToCloudinary } from '../utils/cloudinary.js';
 import { getLoggedInUser } from '../utils/helpers.js';
 
 const postNews = async (req, res) => {
 	try {
-		const { title, description } = req.body;
 
+		const result = validationResult(req);
+		if (!result.isEmpty()) {
+			return res.status(400).json({ errors: result.array()[0].msg });
+		}
+
+		const data = matchedData(req);
 		// Validate file existence
 		if (!req.files || !req.files.image) {
 			return res
@@ -14,19 +20,12 @@ const postNews = async (req, res) => {
 		}
 
 		const loggedInUser = await getLoggedInUser(req);
-		if (loggedInUser.role !== 'admin') {
+		if (!loggedInUser || loggedInUser.role !== 'admin') {
 			return res.status(403).json({
 				message:
 					'You are not authorized to perform this action',
 			});
 		}
-		if (loggedInUser.role !== 'admin') {
-			return res.status(403).json({
-				message:
-					'You are not authorized to perform this action',
-			});
-		}
-
 		// Upload files to Cloudinary
 		const imageUrl = await uploadToCloudinary(
 			req.files.image[0].buffer,
@@ -42,9 +41,7 @@ const postNews = async (req, res) => {
 
 		// Save artifact to database
 		const postedNews = new News({
-			title,
-			description,
-			image: imageUrl,
+			...data, imageUrl
 		});
 
 		await postedNews.save();
@@ -77,12 +74,12 @@ const getNews = async (req, res) => {
 
 const updateNews = async (req, res) => {
 	try {
-	} catch (error) {}
+	} catch (error) { }
 };
 
 const deleteNews = async (req, res) => {
 	try {
-	} catch (error) {}
+	} catch (error) { }
 };
 
 export { postNews, getNews, updateNews, deleteNews };
