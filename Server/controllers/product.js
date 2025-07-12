@@ -19,7 +19,9 @@ const addProduct = async (req, res) => {
 	try {
 		const result = validationResult(req);
 		if (!result.isEmpty()) {
-			return res.status(400).json({ errors: result.array()[0].msg });
+			return res
+				.status(400)
+				.json({ errors: result.array()[0].msg });
 		}
 
 		const data = matchedData(req);
@@ -84,12 +86,100 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
 	try {
-	} catch (error) { }
+		const productId = req.params.id;
+		const result = validationResult(req);
+		if (!result.isEmpty()) {
+			return res
+				.status(400)
+				.json({ errors: result.array()[0].msg });
+		}
+
+		const data = matchedData(req);
+		const loggedInUser = await getLoggedInUser(req);
+		if (!loggedInUser) {
+			return res.status(401).json({
+				message: 'you need to login to perform this action',
+			});
+		}
+		if (loggedInUser.role !== 'admin') {
+			return res.status(403).json({
+				message:
+					'You are not authorized to perform this action',
+			});
+		}
+
+		let imageUrl;
+		if (req.files && req.files.image) {
+			imageUrl = await uploadToCloudinary(
+				req.files.image[0].buffer,
+				'artifacts'
+			);
+			if (!imageUrl) {
+				return res
+					.status(500)
+					.json({ message: 'Image upload failed' });
+			}
+		}
+
+		const updatedProduct = await Product.findByIdAndUpdate(
+			productId,
+			{
+				...data,
+				...(imageUrl && { imageUrl }),
+			},
+			{ new: true }
+		);
+
+		if (!updatedProduct) {
+			return res
+				.status(404)
+				.json({ message: 'Product not found' });
+		}
+
+		return res.status(200).json(updatedProduct);
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'Something went wrong' });
+	}
 };
 
 const deleteProduct = async (req, res) => {
 	try {
-	} catch (error) { }
+		const productId = req.params.id;
+
+		const loggedInUser = await getLoggedInUser(req);
+		if (!loggedInUser) {
+			return res.status(401).json({
+				message: 'you need to login to perform this action',
+			});
+		}
+		if (loggedInUser.role !== 'admin') {
+			return res.status(403).json({
+				message:
+					'You are not authorized to perform this action',
+			});
+		}
+
+		const deletedProduct = await Product.findByIdAndDelete(
+			productId
+		);
+		if (!deletedProduct) {
+			return res
+				.status(404)
+				.json({ message: 'Product not found' });
+		}
+
+		return res
+			.status(200)
+			.json({ message: 'Product deleted successfully' });
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'Something went wrong' });
+	}
 };
 
 export { deleteProduct, updateProduct, getProducts, addProduct };
