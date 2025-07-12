@@ -5,10 +5,11 @@ import { getLoggedInUser } from '../utils/helpers.js';
 
 const postNews = async (req, res) => {
 	try {
-
 		const result = validationResult(req);
 		if (!result.isEmpty()) {
-			return res.status(400).json({ errors: result.array()[0].msg });
+			return res
+				.status(400)
+				.json({ errors: result.array()[0].msg });
 		}
 
 		const data = matchedData(req);
@@ -41,7 +42,8 @@ const postNews = async (req, res) => {
 
 		// Save artifact to database
 		const postedNews = new News({
-			...data, imageUrl
+			...data,
+			imageUrl,
 		});
 
 		await postedNews.save();
@@ -74,12 +76,83 @@ const getNews = async (req, res) => {
 
 const updateNews = async (req, res) => {
 	try {
-	} catch (error) { }
+		const newsId = req.params.id;
+		const result = validationResult(req);
+		if (!result.isEmpty()) {
+			return res
+				.status(400)
+				.json({ errors: result.array()[0].msg });
+		}
+
+		const data = matchedData(req);
+		const loggedInUser = await getLoggedInUser(req);
+		if (!loggedInUser || loggedInUser.role !== 'admin') {
+			return res.status(403).json({
+				message:
+					'You are not authorized to perform this action',
+			});
+		}
+
+		let imageUrl;
+		if (req.files && req.files.image) {
+			imageUrl = await uploadToCloudinary(
+				req.files.image[0].buffer,
+				'artifacts'
+			);
+			if (!imageUrl) {
+				return res
+					.status(500)
+					.json({ message: 'Image upload failed' });
+			}
+		}
+
+		const updatedNews = await News.findByIdAndUpdate(
+			newsId,
+			{
+				...data,
+				...(imageUrl && { imageUrl }),
+			},
+			{ new: true }
+		);
+
+		if (!updatedNews) {
+			return res.status(404).json({ message: 'News not found' });
+		}
+
+		return res.status(200).json(updatedNews);
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'Something went wrong' });
+	}
 };
 
 const deleteNews = async (req, res) => {
 	try {
-	} catch (error) { }
+		const newsId = req.params.id;
+		const loggedInUser = await getLoggedInUser(req);
+		if (!loggedInUser || loggedInUser.role !== 'admin') {
+			return res.status(403).json({
+				message:
+					'You are not authorized to perform this action',
+			});
+		}
+
+		const deletedNews = await News.findByIdAndDelete(newsId);
+		if (!deletedNews) {
+			return res.status(404).json({ message: 'News not found' });
+		}
+
+		return res
+			.status(200)
+			.json({ message: 'News deleted successfully' });
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'Something went wrong' });
+	}
 };
 
 export { postNews, getNews, updateNews, deleteNews };
