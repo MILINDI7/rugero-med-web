@@ -7,7 +7,10 @@ import {
 	postNews,
 	updateNews,
 } from '../controllers/news.js';
-import { postNewsValidator } from '../middlewares/news.js';
+import {
+	postNewsValidator,
+	updateNewsValidator,
+} from '../middlewares/news.js';
 
 const router = express.Router();
 
@@ -17,8 +20,19 @@ const uploadMiddleware = multerUpload().fields([
 
 router.get('/', getNews);
 
-router.post('/', uploadMiddleware, checkSchema(postNewsValidator), postNews);
-router.patch('/:productId', uploadMiddleware, updateNews);
-router.delete('/:productId', deleteNews);
+router.post(
+	'/',
+	uploadMiddleware,
+	checkSchema(postNewsValidator),
+	postNews
+);
+router.patch(
+	'/:newsId',
+	uploadMiddleware,
+	checkSchema(updateNewsValidator),
+	updateNews
+);
+
+router.delete('/:newsId', deleteNews);
 
 export default router;
