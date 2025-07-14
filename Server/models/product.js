@@ -12,7 +12,11 @@ const productSchema = new mongoose.Schema(
 			type: String,
 			minlength: 6,
 		},
-
+price: {
+			type: Number,
+			required: true,
+			trim: true,
+		},
 		category: {
 			type: String,
 			enum: [

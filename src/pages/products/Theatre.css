@@ -100,3 +100,10 @@
 .theatre-contact-button:hover {
   background-color: #16a34a;
 }
+
+.no-product-message {
+  color: #9FC87E;
+  font-size: 1.25rem;
+  text-align: center;
+  margin-top: 9rem;
+}

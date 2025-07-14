@@ -21,12 +21,14 @@ import HomeCares from "./pages/products/HomeCares";
 
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
-
+import { Provider } from "react-redux";
+import {store} from "./redux/store";
 function App() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow">
+    <Provider store={store}>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
@@ -46,6 +48,7 @@ function App() {
       </main>
       <Footer />
     </div>
+  </Provider>
   );
 }
 
