@@ -130,7 +130,7 @@ const updateNews = async (req, res) => {
 
 const deleteNews = async (req, res) => {
 	try {
-		const newsId = req.params.id;
+		const newsId = req.params.newsId;
 		const loggedInUser = await getLoggedInUser(req);
 		if (!loggedInUser || loggedInUser.role !== 'admin') {
 			return res.status(403).json({

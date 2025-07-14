@@ -86,7 +86,7 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
 	try {
-		const productId = req.params.id;
+		const productId = req.params.productId;
 		const result = validationResult(req);
 		if (!result.isEmpty()) {
 			return res
@@ -147,7 +147,7 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
 	try {
-		const productId = req.params.id;
+		const productId = req.params.productId;
 
 		const loggedInUser = await getLoggedInUser(req);
 		if (!loggedInUser) {
