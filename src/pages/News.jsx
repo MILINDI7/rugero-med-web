@@ -1,45 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NewsPage.css';
-
-const newsItems = [
-  {
-    title: "RugeroMed Introduces Advanced Hospital Bed Equipment",
-    image: "/images/hospital-bed.jpg",
-    description: "RugeroMed, a leading medical equipment store, has launched a new range of advanced hospital beds...",
-    link: "/news/hospital-beds"
-  },
-  {
-    title: "RugeroMed Advances Inventory Management",
-    image: "/images/inventory.jpg",
-    description: "Improved logistics and distribution systems for better facility support.",
-    link: "/news/inventory"
-  },
-   {
-    title: "RugeroMed Introduces Advanced Hospital Bed Equipment",
-    image: "/images/hospital-bed.jpg",
-    description: "RugeroMed, a leading medical equipment store, has launched a new range of advanced hospital beds...",
-    link: "/news/hospital-beds"
-  },
-  {
-    title: "RugeroMed Advances Inventory Management",
-    image: "/images/inventory.jpg",
-    description: "Improved logistics and distribution systems for better facility support.",
-    link: "/news/inventory"
-  },
-   {
-    title: "RugeroMed Introduces Advanced Hospital Bed Equipment",
-    image: "/images/hospital-bed.jpg",
-    description: "RugeroMed, a leading medical equipment store, has launched a new range of advanced hospital beds...",
-    link: "/news/hospital-beds"
-  },
-  {
-    title: "RugeroMed Advances Inventory Management",
-    image: "/images/inventory.jpg",
-    description: "Improved logistics and distribution systems for better facility support.",
-    link: "/news/inventory"
-  }
-];
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNews } from '../redux/actions';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const impactStories = [
   {
@@ -75,8 +39,16 @@ const impactStories = [
 ];
 
 const NewsPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const {data, pending, error} = useSelector((state) => state.news);
+  useEffect(() => {
+    dispatch(fetchNews()); 
+  }, [dispatch]);
+
+  if(pending) return <LoadingSpinner />;
+  if(error) return <div className="error-message">{error}</div>;
   return (
     <div>
 
@@ -84,19 +56,19 @@ const NewsPage = () => {
       <section>
         <h2 className="section-title">Latest News</h2>
         <div className="card-slider-wrapper">
-          {newsItems.map((item, idx) => (
+          {data?.news?.map(item => (
             <div
-              key={idx}
+              key={item?._id}
               className="news-card"
               onClick={() => navigate(item.link)}
             >
               <img
-                src={`${process.env.PUBLIC_URL}${item.image}`}
-                alt={item.title}
+                src={item?.imageUrl}
+                alt={item?.title}
               />
               <div className="card-content">
-                <div className="card-title">{item.title}</div>
-                <div className="card-description">{item.description}</div>
+                <div className="card-title">{item?.title}</div>
+                <div className="card-description">{item?.description}</div>
               </div>
             </div>
           ))}

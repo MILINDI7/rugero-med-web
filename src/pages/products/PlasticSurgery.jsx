@@ -1,7 +1,12 @@
 import React from 'react';
 import './PlasticSurgery.css';
-
+import { useLocation } from 'react-router-dom';
 const PlasticSurgery = () => {
+  const location = useLocation();
+  const { products } = location.state || { products: [] };
+  if (!products.length) {
+    return <p className="no-product-message">No products available in this category.</p>;
+  }
   return (
     <div className="plastic-surgery-container">
       {/* Header section with title */}
@@ -18,50 +23,26 @@ const PlasticSurgery = () => {
         <div className="plastic-surgery-products-container">
           <div className="plastic-surgery-products-grid">
             
-            {/* Surgical Instruments */}
-            <div className="plastic-surgery-product-card">
-              <div className="plastic-surgery-product-image-container">
-                <img 
-                  src="/api/placeholder/300/250" 
-                  alt="Plastic Surgery Instruments - Precision surgical tools" 
-                  className="plastic-surgery-product-image"
-                />
+            {products.map((product, index) => (
+              <div key={index} className="plastic-surgery-product-card">
+                <div className="plastic-surgery-product-image-container">
+                  <img
+                    src={product.imageUrl}
+                    alt={product.title}
+                    className="plastic-surgery-product-image"
+                  />
+                </div>
+                <h3 className="plastic-surgery-product-title">
+                  {product.title}
+                </h3>
+                <p className="plastic-surgery-product-description">
+                  {product.description}
+                </p>
+                <button className="plastic-surgery-contact-button">
+                  Contact Us
+                </button>
               </div>
-              <h3 className="plastic-surgery-product-title">
-                Precision Surgical Instruments
-              </h3>
-              <p className="plastic-surgery-product-description">
-                High-quality instruments for<br />
-                cosmetic and reconstructive<br />
-                surgical procedures
-              </p>
-              <button className="plastic-surgery-contact-button">
-                Contact Us
-              </button>
-            </div>
-
-            {/* Implants & Materials */}
-            <div className="plastic-surgery-product-card">
-              <div className="plastic-surgery-product-image-container">
-                <img 
-                  src="/api/placeholder/300/250" 
-                  alt="Plastic Surgery Implants - Medical grade materials" 
-                  className="plastic-surgery-product-image"
-                />
-              </div>
-              <h3 className="plastic-surgery-product-title">
-                Implants & Biomaterials
-              </h3>
-              <p className="plastic-surgery-product-description">
-                Medical-grade implants and<br />
-                biomaterials for aesthetic<br />
-                and reconstructive procedures
-              </p>
-              <button className="plastic-surgery-contact-button">
-                Contact Us
-              </button>
-            </div>
-
+            ))}
           </div>
         </div>
       </div>

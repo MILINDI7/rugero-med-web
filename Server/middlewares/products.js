@@ -7,6 +7,14 @@ const addProductValidator = {
 			errorMessage: 'title should be a string',
 		},
 	},
+	price: {
+		notEmpty: {
+			errorMessage: 'price should not be empty',
+		},
+		isNumeric: {
+			errorMessage: 'price should be a number',
+		},
+	},
 	description: {
 		notEmpty: {
 			errorMessage: 'description should not be empty',

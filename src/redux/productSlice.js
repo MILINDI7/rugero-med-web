@@ -10,7 +10,7 @@ const productsSlice = createSlice({
 	reducers: {
 		setPending: (state) => {
 			state.pending = true;
-			state.error = null; // Clear previous errors
+			state.error = null;
 		},
 		setProducts: (state, action) => {
 			state.data = action.payload;

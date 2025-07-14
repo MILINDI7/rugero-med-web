@@ -1,7 +1,12 @@
 import React from 'react';
 import './HomeCares.css';
-
+import { useLocation } from 'react-router-dom';
 const HomeCares = () => {
+  const location = useLocation();
+  const { products } = location.state || { products: [] };
+  if (!products.length) {
+    return <p className="no-product-message">No products available in this category.</p>;
+  }
   return (
     <div className="home-cares-container">
       {/* Header section with title */}
@@ -17,50 +22,27 @@ const HomeCares = () => {
       <div className="home-cares-products-section">
         <div className="home-cares-products-container">
           <div className="home-cares-products-grid">
-            
-            {/* Medical Equipment */}
-            <div className="home-cares-product-card">
-              <div className="home-cares-product-image-container">
-                <img 
-                  src="/api/placeholder/300/250" 
-                  alt="Home Medical Equipment - Patient care devices" 
-                  className="home-cares-product-image"
-                />
-              </div>
-              <h3 className="home-cares-product-title">
-                Home Medical Equipment
-              </h3>
-              <p className="home-cares-product-description">
-                Essential medical devices for<br />
-                safe and effective home<br />
-                patient care
-              </p>
-              <button className="home-cares-contact-button">
-                Contact Us
-              </button>
-            </div>
 
-            {/* Patient Monitoring */}
-            <div className="home-cares-product-card">
-              <div className="home-cares-product-image-container">
-                <img 
-                  src="/api/placeholder/300/250" 
-                  alt="Patient Monitoring - Home health monitoring systems" 
-                  className="home-cares-product-image"
-                />
+            {products.map((product, index) => (
+              <div key={index} className="home-cares-product-card">
+                <div className="home-cares-product-image-container">
+                  <img
+                    src={product.imageUrl}
+                    alt={product.title}
+                    className="home-cares-product-image"
+                  />
+                </div>
+                <h3 className="home-cares-product-title">
+                  {product.title}
+                </h3>
+                <p className="home-cares-product-description">
+                  {product.description}
+                </p>
+                <button className="home-cares-contact-button">
+                  Contact Us
+                </button>
               </div>
-              <h3 className="home-cares-product-title">
-                Patient Monitoring Systems
-              </h3>
-              <p className="home-cares-product-description">
-                Remote monitoring solutions<br />
-                for continuous patient health<br />
-                tracking at home
-              </p>
-              <button className="home-cares-contact-button">
-                Contact Us
-              </button>
-            </div>
+            ))}
 
           </div>
         </div>

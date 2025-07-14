@@ -34,6 +34,7 @@ const ProductsDashboard = () => {
 	const [filteredProducts, setFilteredProducts] = useState([]);
 	const [newProduct, setNewProduct] = useState({
 		name: '',
+		price: '',
 		image: '',
 		category: 'CSSD',
 		description: '',
@@ -85,6 +86,7 @@ const ProductsDashboard = () => {
 	const handleAddProduct = async () => {
 		const formData = new FormData();
 		formData.append('title', newProduct.name);
+		formData.append('price', newProduct.price);
 		formData.append('image', newProduct.image);
 		formData.append('category', newProduct.category);
 		formData.append('description', newProduct.description);
@@ -337,8 +339,23 @@ const ProductsDashboard = () => {
 						className="w-full border p-2 rounded"
 						required
 					/>
+					
+					<input
+						type="text"
+						placeholder="Price"
+						value={newProduct.price}
+						onChange={(e) =>
+							setNewProduct({
+								...newProduct,
+								price: e.target.value,
+							})
+						}
+						className="w-full border p-2 rounded"
+						required
+					/>
 					<input
 						type="file"
+						accept="image/*"
 						onChange={(e) =>
 							setNewProduct({
 								...newProduct,
